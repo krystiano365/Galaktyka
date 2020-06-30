@@ -5,8 +5,6 @@
 \/ x = height
 */
 
-import java.util.Map;
-
 public class Galaktyka {
 
     static boolean directionHasChanged = false;
@@ -14,6 +12,14 @@ public class Galaktyka {
     static int width;
     static int height;
     static char[][] drawingTable;
+
+    static void initializeWithSpaces(){
+        for (int x = 0; x < height; x++) {
+            for (int y = 0; y < width; y++) {
+                drawingTable[x][y] = ' ';
+            }
+        }
+    }
 
     static void printArray() {
         for (int x = 0; x < height; x++) {
@@ -24,7 +30,7 @@ public class Galaktyka {
         }
     }
 
-    static boolean areStarsAhead(int x, int y) {
+    static boolean areStarsAhead(int x, int y) { // checks if there is a star 2 tiles ahead of current position
         try{
             if(drawingTable[x][y] == '*') return true;
         } catch (Exception e) {
@@ -43,12 +49,22 @@ public class Galaktyka {
         }
     }
 
+    static char translateDirection(char direction){
+        switch (direction){
+            case 'N': return 'S';
+            case 'S': return 'N';
+            case 'E': return 'W';
+            case 'W': return 'E';
+        }
+        return 'A';
+    }
+
     public static void main(String[] args) {
         if (args.length != 1){ //checking how many arguments were passed
             System.out.println("klops");
             return;
         }
-        String str = new String(args[0]);
+        String str = args[0];
         if (!str.matches("\\d{1,4}[NESW]{1}")) {
             System.out.println("klops");
             return;
@@ -58,7 +74,7 @@ public class Galaktyka {
             System.out.println("klops");
             return;
         }
-        char direction = str.charAt(str.length() - 1);
+        char direction = translateDirection(str.charAt(str.length() - 1));
 
         if (direction == 'N' || direction == 'S'){
             width = size + 3;
@@ -67,14 +83,9 @@ public class Galaktyka {
             width = size + 2;
             height = size + 3;
         }
-
         drawingTable = new char[height][width];
-        //initialize with spaces
-        for (int x = 0; x < height; x++) {
-            for (int y = 0; y < width; y++) {
-                drawingTable[x][y] = ' ';
-            }
-        }
+
+        initializeWithSpaces();
 
         int maxY = width - 1;
         int maxX = height - 1;
