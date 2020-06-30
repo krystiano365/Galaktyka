@@ -1,12 +1,11 @@
-package krystian;
-
-import java.util.Arrays;
 /*
 -------> y = width
 |
 |
 \/ x = height
 */
+
+import java.util.Map;
 
 public class Galaktyka {
 
@@ -34,12 +33,41 @@ public class Galaktyka {
         return false;
     }
 
-    public static void main(String[] args) {
-        int size = 5;
-        char direction = 'E';
+    static int[] pickInitialPoint(char direction){
+        switch (direction) {
+            case 'W': return (new int[] {height-1, width-1});
+            case 'E': return (new int[] {0, 0});
+            case 'N': return (new int[] {height-1, 0});
+            case 'S': return (new int[] {0, width-1});
+            default: return new int[] {-1, -1};
+        }
+    }
 
-        width = size + 2;
-        height = size + 3;
+    public static void main(String[] args) {
+        if (args.length != 1){ //checking how many arguments were passed
+            System.out.println("klops");
+            return;
+        }
+        String str = new String(args[0]);
+        if (!str.matches("\\d{1,4}[NESW]{1}")) {
+            System.out.println("klops");
+            return;
+        }
+        int size = Integer.parseInt(str.replaceAll("\\D", ""));
+        if (size < 1 || size > 1000){
+            System.out.println("klops");
+            return;
+        }
+        char direction = str.charAt(str.length() - 1);
+
+        if (direction == 'N' || direction == 'S'){
+            width = size + 3;
+            height = size + 2;
+        } else {
+            width = size + 2;
+            height = size + 3;
+        }
+
         drawingTable = new char[height][width];
         //initialize with spaces
         for (int x = 0; x < height; x++) {
@@ -48,27 +76,16 @@ public class Galaktyka {
             }
         }
 
-
         int maxY = width - 1;
         int maxX = height - 1;
-        int x = 0, y = 0;
+        int x = pickInitialPoint(direction)[0], y = pickInitialPoint(direction)[1];
+        int starCounter = 0;
         while (true) {
 
             if(!directionHasChanged){
                 drawingTable[x][y] = '*';
+                starCounter++;
             }
-
-            /*
-            // change direction if encounters a star
-            try{
-                if (direction == 'E' && drawingTable[x][y+2] == '*') direction = 'S';
-                if (direction == 'W' && drawingTable[x][y-2] == '*') direction = 'N';
-                if (direction == 'S' && drawingTable[x+2][y] == '*') direction = 'W';
-                if (direction == 'N' && drawingTable[x-2][y] == '*') direction = 'E';
-            } catch (Exception e) {
-                System.out.println(e.toString());
-                continue;
-            }*/
 
             try {
                 // move forward:
@@ -128,7 +145,7 @@ public class Galaktyka {
                 directionHasPreviouslyChanged = true;
             }
         }
-
         printArray();
+        System.out.println(width*height - starCounter);
     }
 }
