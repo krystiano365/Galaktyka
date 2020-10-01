@@ -1,4 +1,4 @@
-# Galaktyka - praktyki NCDC - House of Talents
+# Galaktyka - praktyki NCDC - House of Talents 2020
 program drawing square spiral in stdout
 
 
